@@ -27,3 +27,18 @@ The application calculates late fees at $2.00 per overdue day. The H2 console
 is available at [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
 while the application is running. Use JDBC URL `jdbc:h2:mem:librarydb` and
 username `sa` (no password).
+
+## Deploy to Render with MySQL
+
+The repository includes a Render Blueprint (`render.yaml`) and a Java 17 Dockerfile.
+Create a Render Blueprint from the GitHub repository, then provide these secret
+environment values for the web service:
+
+- `SPRING_DATASOURCE_URL`: MySQL JDBC URL, for example
+  `jdbc:mysql://db.example.com:3306/library?sslMode=REQUIRED`
+- `SPRING_DATASOURCE_USERNAME`: MySQL username
+- `SPRING_DATASOURCE_PASSWORD`: MySQL password
+
+The MySQL database must be reachable from Render. Do not commit credentials or
+put them in `render.yaml`; enter them in the Render dashboard. Local development
+continues to use in-memory H2 when `SPRING_DATASOURCE_URL` is not set.
