@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My library | ShelfLife</title>
+    <link rel="stylesheet" th:href="@{/css/library.css}">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" th:href="@{/}" aria-label="ShelfLife home"><span class="brand-mark">S</span> ShelfLife</a>
+    <div class="account-bar">
+        <span class="welcome">Welcome, <strong th:text="${username}">reader</strong></span>
+        <form th:action="@{/logout}" method="post">
+            <button class="button button-quiet" type="submit">Sign out</button>
+        </form>
+    </div>
+</header>
+
+<main class="page">
+    <section class="page-intro">
+        <div>
+            <p class="eyebrow">YOUR PERSONAL LIBRARY</p>
+            <h1>Find your next good read.</h1>
+            <p class="intro-copy">Borrow a book, keep an eye on your due dates, and enjoy reading.</p>
+        </div>
+        <div class="intro-icon" aria-hidden="true">📚</div>
+    </section>
+
+    <div class="notice" role="status" th:if="${notice}" th:text="${notice}"></div>
+
+    <section class="panel">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">THE COLLECTION</p>
+                <h2>Available books</h2>
+            </div>
+            <span class="count-pill" th:text="${#lists.size(availableBooks)} + ' available'">5 available</span>
+        </div>
+        <div class="table-scroll">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Book</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Borrow</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="book : ${availableBooks}">
+                    <td class="book-title" th:text="${book.title}">The Great Gatsby</td>
+                    <td class="muted" th:text="${book.author}">F. Scott Fitzgerald</td>
+                    <td>
+                        <form class="borrow-form" th:action="@{/issue}" method="post">
+                            <input type="hidden" name="bookId" th:value="${book.id}">
+                            <label class="sr-only" th:for="'days-' + ${book.id}">Borrow duration in days</label>
+                            <input class="days-input" type="number" name="days" min="1" max="90" value="14"
+                                   th:id="'days-' + ${book.id}" required>
+                            <span class="muted">days</span>
+                            <button class="button button-primary" type="submit">Borrow book</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(availableBooks)}">
+                    <td class="empty-state" colspan="3">
+                        <strong>Everything is checked out for now.</strong>
+                        <span>Check back soon to find your next read.</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="footnote">Choose a borrowing period from 1 to 90 days. Overdue books accrue a $2.00 daily fee.</p>
+    </section>
+
+    <section class="panel">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">YOUR READING LIST</p>
+                <h2>Books you’ve borrowed</h2>
+            </div>
+            <span class="count-pill" th:text="${#lists.size(activeRecords)} + ' on loan'">0 on loan</span>
+        </div>
+        <div class="table-scroll">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Book</th>
+                    <th scope="col">Checked out</th>
+                    <th scope="col">Due date</th>
+                    <th scope="col">Late fee</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="record : ${activeRecords}">
+                    <td class="book-title" th:text="${record.book.title}">Clean Code</td>
+                    <td class="muted" th:text="${#temporals.format(record.issueDate, 'MMM d, yyyy')}">Jan 1, 2026</td>
+                    <td th:text="${#temporals.format(record.dueDate, 'MMM d, yyyy')}">Jan 15, 2026</td>
+                    <td th:classappend="${record.calculateLateFee().signum() > 0} ? 'late-fee' : 'fee-clear'">
+                        $<span th:text="${#numbers.formatDecimal(record.calculateLateFee(), 1, 2)}">0.00</span>
+                    </td>
+                    <td>
+                        <form th:action="@{/return}" method="post">
+                            <input type="hidden" name="recordId" th:value="${record.id}">
+                            <button class="button button-secondary" type="submit">Return book</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(activeRecords)}">
+                    <td class="empty-state" colspan="5">
+                        <strong>Your reading list is clear.</strong>
+                        <span>Borrow a book above and it will show up here.</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+<footer class="site-footer">A little more reading makes a brighter day.</footer>
+</body>
+</html>

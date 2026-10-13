@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign in | ShelfLife</title>
+    <link rel="stylesheet" th:href="@{/css/library.css}">
+</head>
+<body class="auth-page">
+<main class="auth-layout">
+    <a class="brand auth-brand" th:href="@{/login}"><span class="brand-mark">S</span> ShelfLife</a>
+    <section class="auth-card">
+        <div class="auth-icon" aria-hidden="true">📖</div>
+        <p class="eyebrow">WELCOME BACK</p>
+        <h1>Good to see you.</h1>
+        <p class="auth-copy">Sign in to pick up where your next chapter begins.</p>
+
+        <div class="alert alert-error" role="alert" th:if="${param.error}">
+            The username or password wasn’t recognized. Please try again.
+        </div>
+        <div class="alert alert-success" role="status" th:if="${param.registered}">
+            Your account is ready. Sign in to explore the library.
+        </div>
+        <div class="alert alert-success" role="status" th:if="${param.logout}">
+            You’re signed out. We hope to see you again soon.
+        </div>
+
+        <form class="auth-form" th:action="@{/login}" method="post">
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" autocomplete="username"
+                   placeholder="Your username" required autofocus>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password"
+                   placeholder="Your password" required>
+            <button class="button button-primary button-full" type="submit">Sign in</button>
+        </form>
+        <p class="auth-switch">New to ShelfLife? <a th:href="@{/register}">Create an account</a></p>
+    </section>
+    <p class="auth-footer">Your cozy corner for discovering books.</p>
+</main>
+</body>
+</html>

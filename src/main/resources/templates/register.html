@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create account | ShelfLife</title>
+    <link rel="stylesheet" th:href="@{/css/library.css}">
+</head>
+<body class="auth-page">
+<main class="auth-layout">
+    <a class="brand auth-brand" th:href="@{/login}"><span class="brand-mark">S</span> ShelfLife</a>
+    <section class="auth-card">
+        <div class="auth-icon" aria-hidden="true">✨</div>
+        <p class="eyebrow">START YOUR NEXT CHAPTER</p>
+        <h1>Create your account.</h1>
+        <p class="auth-copy">A world of good reads is just around the corner.</p>
+
+        <div class="alert alert-error" role="alert" th:if="${error}" th:text="${error}"></div>
+
+        <form class="auth-form" th:action="@{/register}" method="post">
+            <label for="username">Choose a username</label>
+            <input id="username" name="username" type="text" autocomplete="username"
+                   placeholder="At least 3 characters" minlength="3" maxlength="64"
+                   pattern="[\-a-zA-Z0-9._]+" th:value="${username}" required autofocus>
+            <span class="field-hint">Letters, numbers, dots, dashes, and underscores work best.</span>
+            <label for="password">Create a password</label>
+            <input id="password" name="password" type="password" autocomplete="new-password"
+                   placeholder="At least 8 characters" minlength="8" required>
+            <label for="confirmPassword">Confirm your password</label>
+            <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password"
+                   placeholder="Enter your password again" minlength="8" required>
+            <button class="button button-primary button-full" type="submit">Create account</button>
+        </form>
+        <p class="auth-switch">Already have an account? <a th:href="@{/login}">Sign in</a></p>
+    </section>
+    <p class="auth-footer">Your cozy corner for discovering books.</p>
+</main>
+</body>
+</html>
